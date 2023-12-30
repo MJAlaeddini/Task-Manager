@@ -1,4 +1,4 @@
-! Adapted from Fowler's model for software engineering course
+/' Adapted from Fowler's model for software engineering course '/
 @startuml
 class Action {
   - title: String
