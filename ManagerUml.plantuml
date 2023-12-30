@@ -1,0 +1,68 @@
+! Adapted from Fowler's model for software engineering course
+@startuml
+class Action {
+  - title: String
+  - description: String
+  - deadline: Date
+  - priority: int
+  - statuses: List<ActionStatus>
+  - prerequisites: List<Action>
+  - relatedPlans: List<Plan>
+  - assignedUsers: List<User>
+  - started: boolean
+  + ...
+}
+class ActionStatus {
+  - name: String
+  - color: String
+  - actions: List<Action>
+  + ...
+}
+class Plan {
+  - title: String
+  - description: String
+  - deadline: Date
+  - actions: List<Action>
+  - subPlans: List<Plan>
+  - creator: User
+  + ...
+}
+class User {
+  - name: String
+  - email: String
+  - password: String
+  - assignedActions: List<Action>
+  - createdPlans: List<Plan>
+  + login(email: String, password: String)
+  + logout()
+  + createPlan(title: String, description: String, deadline: Date)
+  + addAction(action: Action, plan: Plan)
+  + assignAction(action: Action, user: User)
+  + updateActionStatus(action: Action, status: ActionStatus)
+  + startAction(action: Action)
+  + viewPlan(plan: Plan)
+  + viewAction(action: Action)
+  + receiveNotification(notification: Notification)
+  + ...
+}
+class Notification {
+  - message: String
+  - time: Date
+  - action: Action
+  - sender: User
+  - receiver: User
+  + ...
+}
+Action "0..*" -- "1" ActionStatus
+Action "0..*" -- "0..*" Action : prerequisites
+Action "0..*" -- "0..*" Plan : relatedPlans
+Action "0..*" -- "0..*" User : assignedUsers
+Plan "1" -- "0..*" Action
+Plan "1" -- "0..*" Plan
+Plan "1" -- "1" User : creator
+User "0..*" -- "0..*" Action : assignedActions
+User "0..*" -- "0..*" Plan : createdPlans
+Notification "1" -- "1" Action
+Notification "1" -- "1" User : sender
+Notification "1" -- "1" User : receiver
+@enduml
