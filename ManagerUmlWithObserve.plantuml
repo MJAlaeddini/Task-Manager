@@ -1,0 +1,59 @@
+@startuml
+class Action {
+  ...
+}
+
+class ActionStatus {
+  ...
+}
+
+class Plan {
+  ...
+}
+
+interface ActionManager {
+  + attach(observer: ActionObserver)
+  + detach(observer: ActionObserver)
+  + notify()
+  ...
+}
+
+class SimpleActionManager extends ActionManager {
+  ...
+}
+
+class AdvancedActionManager extends ActionManager {
+  ...
+}
+
+interface ActionObserver {
+  + update(action: Action)
+}
+
+class UserNotificationObserver implements ActionObserver {
+  + update(action: Action)
+}
+
+class User {
+  - actionManager: ActionManager
+  - observer: UserNotificationObserver
+  ...
+}
+
+class Notification {
+  ...
+}
+
+Action "0..*" -- "1" ActionStatus
+Action "0..*" -- "0..*" Action : prerequisites
+Action "0..*" -- "0..*" Plan : relatedPlans
+Action "0..*" -- "0..*" User : assignedUsers
+Plan "1" -- "0..*" Action
+Plan "1" -- "0..*" Plan
+Plan "1" -- "1" User : creator
+User "0..*" -- "0..*" Plan : createdPlans
+Notification "1" -- "1" Action
+Notification "1" -- "1" User : sender
+Notification "1" -- "1" User : receiver
+ActionManager "0..*" -- "0..*" ActionObserver : observes
+@enduml
